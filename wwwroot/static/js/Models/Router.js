@@ -117,7 +117,7 @@ const Router = async () => {
 
     /* If no route matches the url go to /Error */
     if(DestinationRoute == null){
-        DestinationRoute = RouterParams.Routes.find(item => item.Pattern == "/Error");
+        DestinationRoute = RouterParams.Routes.find(item => item.Pattern == "/Error/[Content]");
     }
 
     /*
