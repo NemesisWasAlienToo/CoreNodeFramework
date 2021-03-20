@@ -4,14 +4,15 @@ export default class CotrollerModel{
         this.Params = Params;
     }
 
-    async Build(){
+    async Body(){
         return '';
     }
 
-    Render(PageContent){
+    async Render(){
 
-        /**/
+        /* Renders the body  of controller */
         document.getElementById("app").innerHTML = "";
-        document.getElementById("app").appendChild(PageContent.Build());
+        let BodyWidget = await this.Body();
+        document.getElementById("app").appendChild(BodyWidget.Build());
     }
 }

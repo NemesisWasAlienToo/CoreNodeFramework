@@ -122,7 +122,7 @@
       <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
         <li class="nav-item has-sub open"><a href="#"><i class="ft-sidebar"></i><span class="menu-title" data-i18n="">صفحات</span></a>
           <ul class="menu-content">
-            <li class="is-shown active"><a class="menu-item" href="/" data-link data-nav="">خانه</a></li>
+            <li class="is-shown active"><a class="menu-item" href="/" data-link data-nav>خانه</a></li>
             <li class="is-shown"><a class="menu-item" href="/Error/TestError" data-link data-nav>تست</a></li>
           </ul>
         </li>
@@ -138,12 +138,12 @@
           <div class="breadcrumbs-top d-inline-block">
             <div class="breadcrumb-wrapper mr-1">
               <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="index.html">خانه</a>
+                <li class="breadcrumb-item"><a href="/" data-link>خانه</a>
                 </li>
                 <li class="breadcrumb-item"><a href="#">عناصر فرم</a>
                 </li>
                 <li class="breadcrumb-item active">ورودی فرم
-          </li>
+                </li>
               </ol>
             </div>
           </div>
@@ -171,5 +171,40 @@
   <script src="/static/Chameleon/app-assets/vendors/js/forms/tags/form-field.js" type="text/javascript"></script>
   <script src="/static/Chameleon/app-assets/js/scripts/forms/custom-file-input.min.js"></script>
   <script type="module" src="/static/js/Models/Router.js"></script>
+  <script type="module">
+    import RouterModel from "/static/js/Models/Router.js";
+    import RootController from "/static/js/Controllers/Index.js";
+    import ErrorController from "/static/js/Controllers/Error.js";
+
+    var Router = new RouterModel({
+
+      /* Function to be called on error */
+      OnErrorCallBack : ErrorContent => { alert(ErrorContent); },
+
+      /* Functiion to be called on navigation link selection */
+      OnNavItemSelect : NavItem => {
+        NavItem.parentNode.classList.add("active");
+      },
+
+      /* Function to be called on navigation link unselection */
+      OnNavItemUnelect : NavItem => {
+          NavItem.parentNode.classList.remove("active");
+        },
+
+      /* Function to create main layout on Document load  */
+      LayoutBuilder : Params => {},
+
+      /* Route patterns hierarchy, the sooner defined, the higher the priority
+      and the sooner it is captured and thus occures first */
+      Routes: [
+          { Pattern: "/"                , Controller: RootController  },
+          { Pattern: "/Error/[Content]" , Controller: ErrorController },
+      ],
+
+      /* Index of the error route in the Routes objects */
+      ErrorRouteIndex : 1,
+      
+    });
+  </script>
 </body>
 </html>
