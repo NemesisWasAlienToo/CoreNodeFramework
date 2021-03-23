@@ -1,18 +1,29 @@
 /**/
 export default class CotrollerModel{
+
+    static ControllerContext;
+
+    /**/
     constructor(Params){
         this.Params = Params;
     }
 
-    async Body(){
-        return '';
+    async Init(){
+
     }
 
+    /**/
+    async Body(){
+        
+    }
+
+    /**/
     async Render(){
 
         /* Renders the body  of controller */
-        document.getElementById("app").innerHTML = "";
+        let AppContent = document.getElementById("app");
+        AppContent.innerHTML = "";
         let BodyWidget = await this.Body();
-        document.getElementById("app").appendChild(BodyWidget.Build());
+        AppContent.appendChild(await BodyWidget.Build());
     }
 }

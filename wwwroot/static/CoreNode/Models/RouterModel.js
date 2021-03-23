@@ -1,4 +1,4 @@
-export default class RouterClass{
+export default class RouterModel{
     constructor(RouterParams = {
 
         /* Function to be called on error */
@@ -10,19 +10,35 @@ export default class RouterClass{
         /* Function to be called on navigation link unselection */
         OnNavItemUnelect : NavItem => {},
   
-        /* Function to create main layout on Document load  */
-        LayoutBuilder : Params => {},
+        /* Main layout  */
+        Layout : null,
   
         /* Route patterns hierarchy, the sooner defined, the higher the priority */
         Routes: [
             {},
         ],
+
+        /* Index of the error route in the Routes objects */
+        ErrorRouteIndex : 0,
       })
       {
         this.RouterParams = RouterParams;
 
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", function() {
+              navigator.serviceWorker
+                .register("/ServiceWorker.js")
+                .then(res => console.log("service worker registered"))
+                .catch(err => console.log("service worker not registered", err))
+            })
+        }
+
+        if(this.RouterParams.Layout !== null){
+            this.RouterParams.Layout.Render();
+        }
+
         /* On history button push */
-        window.addEventListener("popstate", this.Router);
+        window.addEventListener("popstate", this.Router());
 
         document.addEventListener("DOMContentLoaded", () => {
             document.querySelectorAll("[data-link]").forEach(item => {
@@ -31,11 +47,7 @@ export default class RouterClass{
                     this.NavigateTo(e.target.href);
                 });
             });
-        
-            this.Router();
-        });
-        
-        document.addEventListener("DOMContentLoaded", () => {
+
             document.body.addEventListener("click", e => {
                 if (e.target.matches("[data-link]")) {
                     e.preventDefault();
@@ -155,7 +167,9 @@ export default class RouterClass{
         
     
         /* Executes the Builder */
-        await new DestinationRoute.Controller(Params).Render();
+        let ControllerInstance = await new DestinationRoute.Controller(Params);
+        await ControllerInstance.Init();
+        await ControllerInstance.Render();
     
         document.querySelectorAll("[data-link][data-nav]").forEach(item => {
     

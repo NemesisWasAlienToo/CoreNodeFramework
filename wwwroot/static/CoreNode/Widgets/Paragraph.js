@@ -8,6 +8,6 @@ export default class extends WidgetModel {
     }
 
     Build(){
-        return this.CreateNode("p","form-control-static", el => { el.innerText = this.Content; });
+        return WidgetModel.CreateNode("p","form-control-static", el => { el.innerText = this.Content; });
     }
 }

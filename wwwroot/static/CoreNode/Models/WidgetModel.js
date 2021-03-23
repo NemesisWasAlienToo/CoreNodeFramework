@@ -1,10 +1,15 @@
 /**/
 export default class WidgetModel{
-    
+
+    /**/    
     constructor(){
     }
 
-    CreateNode(ElementTag, Classes = "", Initializer = el => {}, Childs = null) {
+    /**/
+    static Fields = () => {};
+
+    /**/
+    static CreateNode(ElementTag, Classes = "", Initializer = el => {}, Childs = null) {
 
         let _Element =  document.createElement(ElementTag);
         _Element.className = Classes;
@@ -21,12 +26,18 @@ export default class WidgetModel{
 
         return _Element;
     }
-
-    BuildChilds(){
-        return this.Childs.map(child => child.Build());
+    
+    /**/
+    static BuildWidget(ChildWidget){
+        return ChildWidget.Build();
     }
 
+    /**/
+    static BuildWidgets(WidgetList){
+        return WidgetList.map(child => child.Build());
+    }
+
+    /**/
     Build(){
-        return '';
     }
 }
