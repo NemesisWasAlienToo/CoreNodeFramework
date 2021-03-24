@@ -2,10 +2,9 @@ import WidgetModel from "../Models/WidgetModel.js"
 
 export default class extends WidgetModel {
 
-    constructor(Title = "", Helper = "" , Childs = []){
+    constructor(Content = "" , Childs = []){
         super();
-        this.Title = Title;
-        this.Helper = Helper;
+        this.Content = Content;
         this.Childs = Childs;
     }
 
@@ -16,12 +15,12 @@ export default class extends WidgetModel {
     };
 
     Build(){
-        return WidgetModel.CreateNode("footer","text-muted", el => {}, [
+        return WidgetModel.CreateNode("footer","text-muted navbar-fixed-bottom", el => {}, [
             WidgetModel.CreateNode("div","container", el => {}, [
                 WidgetModel.CreateNode("p","float-right", el => {}, [
                     WidgetModel.CreateNode("a","card-title", el => { el.innerText = "Back to top"; el.href = "#"; }),
                 ]),
-                WidgetModel.CreateNode("p","", el => {  el.innerText = "Fotter content"; }, null),
+                WidgetModel.CreateNode("p","", el => {  el.innerText = this.Content; }, null),
             ]),
         ]);
     }

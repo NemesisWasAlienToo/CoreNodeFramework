@@ -4,7 +4,18 @@ export default class CotrollerModel{
     static ControllerContext;
 
     /**/
-    constructor(Params){
+    constructor(ReRender = () => {}, layoutBuilder = (LayoutParams = {}) => {}, OnErrorCallBack = ErrorContent => {}, Params = {}){
+
+        /**/
+        this.ReRender = ReRender;
+
+        /**/
+        this.layoutBuilder = layoutBuilder;
+
+        /**/
+        this.OnErrorCallBack = OnErrorCallBack;
+
+        /**/
         this.Params = Params;
     }
 

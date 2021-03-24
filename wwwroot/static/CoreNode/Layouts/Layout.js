@@ -10,7 +10,7 @@ export default class extends LayoutModel {
 
     static Fields = () => {};
 
-    async Build(){
+    Build(){
         return LayoutModel.CreateNode("div","",el => {},[
             LayoutModel.BuildWidget(this.Nav),
             LayoutModel.CreateNode("div","jumbotron text-center", el => {}, [

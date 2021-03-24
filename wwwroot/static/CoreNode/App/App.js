@@ -22,13 +22,15 @@ var Router = new RouterModel({
         NavItem.parentNode.classList.remove("active");
     },
 
-    /* Main layout  */
-    Layout : new Layout(
-        new Navigator("Core Node","/",[
+    /* Main layout builder function */
+    LayoutBuilder : (LayoutParams = {
+        Title : "Core Node"
+    }) => new Layout(
+        new Navigator(LayoutParams.Title,"/",[
             new NavigationLink("Error","/Error/Error is : :)"),
             new NavigationLink("User", "/UserModels")
         ]),
-        new Footer("Footer","Footer",[])
+        new Footer("Footer content goes here" ,[])
     ),
 
     /* Route patterns hierarchy, the sooner defined, the higher the priority

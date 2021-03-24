@@ -31,13 +31,18 @@ export default class LayoutModel extends WidgetModel{
     }
 
     /**/
-    async Build(){
+    Loading(IsLoading){
 
     }
 
-    async Render(){
+    /**/
+    Build(){
 
-        /* Renders the body  of Layput */
-        document.body.prepend(await this.Build());
+    }
+
+    Render(){
+        /* Renders the body of Layput */
+        document.body.innerHTML = "";
+        document.body.prepend(this.Build());
     }
 }

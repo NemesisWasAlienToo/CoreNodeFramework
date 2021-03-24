@@ -10,8 +10,8 @@ export default class RouterModel{
         /* Function to be called on navigation link unselection */
         OnNavItemUnelect : NavItem => {},
   
-        /* Main layout  */
-        Layout : null,
+        /* Main layout builder function */
+        LayoutBuilder : (LayoutParams = {}) => {},
   
         /* Route patterns hierarchy, the sooner defined, the higher the priority */
         Routes: [
@@ -33,9 +33,7 @@ export default class RouterModel{
             })
         }
 
-        if(this.RouterParams.Layout !== null){
-            this.RouterParams.Layout.Render();
-        }
+        this.RouterParams.LayoutBuilder().Render();
 
         /* On history button push */
         window.addEventListener("popstate", this.Router());
@@ -157,6 +155,7 @@ export default class RouterModel{
     
         /* If no route matches the url go to Error route */
         if(DestinationRoute == null){
+            this.RouterParams.OnErrorCallBack("404 : Page not found");
             DestinationRoute = this.RouterParams.Routes[this.RouterParams.ErrorRouteIndex];
         }
     
@@ -164,10 +163,13 @@ export default class RouterModel{
         if(Partial)
         we can check if the view is partial then save the content of body in some variable and later if #app were not found we know that we should restore that
         */
-        
     
         /* Executes the Builder */
-        let ControllerInstance = await new DestinationRoute.Controller(Params);
+        let ControllerInstance = await new DestinationRoute.Controller(() => {
+            this.RouterParams.LayoutBuilder().Render();
+            this.Router();
+        }, this.RouterParams.LayoutBuilder, this.RouterParams.OnErrorCallBack, Params);
+
         await ControllerInstance.Init();
         await ControllerInstance.Render();
     
