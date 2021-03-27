@@ -1,32 +1,33 @@
 import WidgetModel from "../Models/WidgetModel.js"
 
 export default class extends WidgetModel {
+	constructor(Title = "", Helper = "", Childs = [], Size = 0){
+		super();
+		this.Title = Title;
+		this. Helper = Helper;
+		this.Childs = Childs;
+		this.Size = Size;
+	}
 
-    constructor(Title = "", Helper = "" , Childs = []){
-        super();
-        this.Title = Title;
-        this.Helper = Helper;
-        this.Childs = Childs;
-    }
-
-    static Fields = () => {
-        Title : "Card title";
-        Helper : "Helper text bellow the title";
-        Childs : "Inner widgets" 
-    };
-
-    Build(){
-        return WidgetModel.CreateNode("div","col-xl-4 col-lg-6 col-md-12", el => {}, [
-            WidgetModel.CreateNode("div","card", el => {}, [
-                WidgetModel.CreateNode("div","card-header", el => {}, [
-                    WidgetModel.CreateNode("h4","card-title", el => { el.innerText = WidgetModel.Title; }),
-                ]),
-                WidgetModel.CreateNode("div","card-block", el => {}, [
-                    WidgetModel.CreateNode("div","card-body", el => {}, [
-                        WidgetModel.CreateNode("fieldset","form-group", el => {}, WidgetModel.BuildWidgets(this.Childs)),
-                    ]),
-                ]),
-            ]),
-        ]);
-    }
+	Build(){
+		return WidgetModel.CreateNode("div"," card ", el => {
+			el.setAttribute('style', 'width: 50%;');
+		} , [
+			WidgetModel.CreateNode("div"," card-body", el => {
+				
+			} , [
+				WidgetModel.CreateNode("h5"," card-title", el => {
+					
+					el.innerText = this.Title;
+				} , [
+				]),
+				WidgetModel.CreateNode("p"," card-text", el => {
+					
+					el.innerText = this.Helper;
+				} , [
+				]),
+				WidgetModel.CreateNode("div", "", el => {}, WidgetModel.BuildWidgets(this.Childs)),
+			]),
+		]);
+	}
 }

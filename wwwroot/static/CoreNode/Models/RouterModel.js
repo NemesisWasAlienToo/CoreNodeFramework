@@ -55,6 +55,10 @@ export default class RouterModel{
         
             this.Router();
         });
+
+        if (!('indexedDB' in window)) {
+            console.log('Tour browser does not support IndexedDB');
+        }
     }
 
     /*  */
@@ -67,7 +71,7 @@ export default class RouterModel{
             element.src = item.getAttribute("src");
             element.type = item.getAttribute("type");
             item.remove();
-            document.body.appendChild(element);
+            document.head.appendChild(element);
         });
     };
 

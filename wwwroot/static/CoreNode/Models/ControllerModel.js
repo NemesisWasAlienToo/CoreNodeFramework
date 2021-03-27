@@ -35,6 +35,6 @@ export default class CotrollerModel{
         let AppContent = document.getElementById("app");
         AppContent.innerHTML = "";
         let BodyWidget = await this.Body();
-        AppContent.appendChild(await BodyWidget.Build());
+        AppContent.appendChild(BodyWidget.Build());
     }
 }

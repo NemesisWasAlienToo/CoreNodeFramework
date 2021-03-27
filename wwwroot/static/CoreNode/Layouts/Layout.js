@@ -17,7 +17,7 @@ export default class extends LayoutModel {
                 LayoutModel.CreateNode("section","jumbotron text-center", el => {},[
                     LayoutModel.CreateNode("div","container",el => {}, [
                         LayoutModel.CreateNode("h1", "", el => { el.innerText = "Example"}),
-                        LayoutModel.CreateNode("p", "lead text-muted", el => { el.innerText = "Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don’t simply skip over it entirely."}),
+                        LayoutModel.CreateNode("p", "lead text-muted", el => { el.innerText = "Your leading text goes here"}),
                         LayoutModel.CreateNode("p", "", el => {}, null),
                     ]),
                 ]),

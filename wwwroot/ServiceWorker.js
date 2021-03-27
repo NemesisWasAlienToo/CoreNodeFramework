@@ -5,7 +5,6 @@ const Assets = [
   "/",
   "/manifest.json",
   "/favicon.ico",
-  "/ServiceWorker.js",
   "/static/css/site.css",
   "/static/icons/144.png",
 ];
@@ -18,10 +17,15 @@ self.addEventListener("install", InstallEvent => {
   );
 });
 
-self.addEventListener("fetch", FetchEvent => {
-  FetchEvent.respondWith(
-    caches.match(FetchEvent.request).then(res => {
-      return res || fetch(FetchEvent.request);
+self.addEventListener('fetch', function(event) {
+  event.respondWith(
+    caches.open(CacheName).then(function(cache) {
+      return cache.match(event.request).then(function (response) {
+        return response || fetch(event.request).then(function(response) {
+          cache.put(event.request, response.clone());
+          return response;
+        });
+      });
     })
   );
 });
