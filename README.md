@@ -71,7 +71,7 @@ Bellow shows an example initializing a Router object :
 ```sh
     <head>
         <script type="module">
-        
+
             /* Refrence to framework router and application */
             import ApplicationModel from "../Models/ApplicationModel.js";
 
@@ -258,4 +258,235 @@ export default class extends WidgetModel {
     }
 }
 
+```
+
+## Using Coer Node compiler
+
+Core Node compiler is a tool for compiling html files to javascript widgets usable by the frame work.
+This tool gives you the freedom to translate any custome html file into usable widget containing valid arguments ang childs you desire.
+To use the translator there are a few steps to take.
+ - Put the html content you want to translate in a file
+ - Add a json object before the html content to specify files type and arguments
+
+ ### Html json type declaration
+
+ CoreNodeCompiler can automatically put your arguments in the proper place after generating the javascript widget.
+ But for it to be able to do that there a few things that it needs to know.
+ take the example bellow : 
+ ``` sh
+ #{
+	"Type" : 0,
+	"Arguments" : {
+		"progressvalue" : {
+			"Type" : 0,
+			"Description" : "Progressbar value"
+		},
+		"heightfunc" : {
+			"Type" : 3,
+			"Description" : "function to give the value"
+		},
+		"name" : {
+			"Type" : 0,
+			"Description" : "function to give the value"
+		}
+	}
+}#
+<div class="progress">
+    <div class="progress-bar progress-bar-striped progress-bar-animated" role="#name#" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: #progressvalue#;height:#heightfunc#"></div>
+</div>
+ ```
+
+ ## Arguments
+
+ ### Defining arguments
+
+ > WARNING : _always define argument names with low case letters_
+
+ The json data needs to be inside hash tags to be recognized by the translator.
+ Json data gives the translator two important data:
+  - First the type of the widget output which can be either Widget (0) or Layout (1) specified after the "Type" tag.
+  - Second the arguments it takes.
+
+  To define an argument you need to mention its name ("progressvalue"), then its type picked from the table bellow and last but not least its description.
+
+ | Type | Value | Functionality |
+| ------ | ------ | ------ |
+| Single | 0 | Integer, string or any other type that contains only a single value |
+| Widget | 1 | A child widget |
+| Widget List | 2 | A list of widgets |
+| Function | 3 | A value to be retrieved by a function |
+
+Example :
+
+ ``` sh
+ #{
+	"Type" : 0,
+
+```
+ This file is a widget
+```sh
+	"Arguments" : {
+		"name" : {
+			"Type" : 0,
+			"Description" : "function to give the value"
+		}
+        "childs" : {
+			"Type" : 2,
+			"Description" : "child widgets"
+		}
+	}
+}#
+ ```
+ The widget takes one argument of single type named "name" and a variable of named "childs" as Widget List type and we can see each one's description.
+
+ ### Using arguments inside html file
+
+ #### Widget
+
+ After defining a single or function type argument you need to put it's name inside two hash tag signs (#) where it's content is supposed to be in the html file.
+ > In case you need to use the hash tag sign and it should not be interpreted as command just put a \ sigen before them (\# will be translated into # in the output file)
+ After defining a widget of widget list argument you need to define a html element by the argument name where it's content is supposed to be in the html file.
+
+ Input example : 
+
+ ```sh
+  #{
+	"Type" : 0,
+	"Arguments" : {
+		"progressvalue" : {
+			"Type" : 0,
+			"Description" : "Progressbar value"
+		},
+		"heightfunc" : {
+			"Type" : 3,
+			"Description" : "function to give the value"
+		},
+		"name" : {
+			"Type" : 0,
+			"Description" : "function to give the value"
+		},
+        "childs" : {
+			"Type" : 2,
+			"Description" : "child widgets"
+		}
+	}
+}#
+    <div class="progress">
+        <div class="progress-bar progress-bar-striped progress-bar-animated" role="#name#" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: #progressvalue#;height:#heightfunc#">
+        <childs></childs> or <childs/>
+    </div>
+ ```
+
+  In the example above the translator will build the html file into a widget format and for each argument its content is placed in its place properly after its value is passed
+  through the constructor of function of class.
+
+ Output :
+ ```sh
+import WidgetModel from "../Models/WidgetModel.js"
+
+export default class extends WidgetModel {
+	constructor(progressvalue, heightfunc = () => {}, name, childs = [])
+	{
+        /* all arguments are passed to the widget when an instance is being created */
+		super();
+		this.progressvalue = progressvalue;
+		this.heightfunc = heightfunc;
+		this.name = name;
+		this.childs = childs;
+	}
+
+	static Fields = () => { 
+		progressvalue : "Progressbar value";
+		heightfunc : "function to give the value";
+		name : "function to give the value";
+		childs : "function to give the value";
+	}
+
+	Build(){	
+		return WidgetModel.CreateNode("div"," progress", el => {}, [
+			WidgetModel.CreateNode("div"," progress-bar progress-bar-striped progress-bar-animated", el => {
+				el.setAttribute("role", this.name); //---------> the elements name will be defined by name variable of this instance
+				el.setAttribute("aria-valuenow", "75");
+				el.setAttribute("aria-valuemin", "0");
+				el.setAttribute("aria-valuemax", "100");
+				el.style.width = this.progressvalue; // ------> the progress bar width will be defined by progressvalue variable of this instance
+				el.style.height = this.heightfunc(); // ------> the progress bar height will be defined by heightfunc() function of this instance
+			}, []),
+			WidgetModel.CreateNode("childs"," ", el => {}, WidgetModel.BuildWidgets(this.childs)), ----> widgets passed childs variable through of this instance
+		]);
+	}
+}
+ ```
+#### Layout
+Layout files are almost identical to widget files.
+The slight deiffrence is as bellow :
+- Where you need to put the body of your application you can just put the html tag of "app", and dont forget to change the files "Type" to 1.
+
+Example input :
+
+```sh
+#{
+	"Type" : 1,
+	"Arguments" : {
+		"progressvalue" : {
+			"Type" : 0,
+			"Description" : "Progressbar value"
+		},
+		"heightfunc" : {
+			"Type" : 3,
+			"Description" : "function to give the value"
+		},
+		"name" : {
+			"Type" : 0,
+			"Description" : "function to give the value"
+		},
+		"childs" : {
+			"Type" : 2,
+			"Description" : "function to give the value"
+		}
+	}
+}#
+<div class="progress">
+    <div class="progress-bar progress-bar-striped progress-bar-animated" role="#name#" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: #progressvalue#;height:#heightfunc#"></div>
+	<childs/>
+	<app/>
+</div>
+```
+
+Output :
+```sh
+import LayoutModel from ".. /Models/LayoutModel.js"
+
+export default class extends LayoutModel {
+	constructor(progressvalue, heightfunc = () => {}, name, childs = [])
+	{
+		super();
+		this.progressvalue = progressvalue;
+		this.heightfunc = heightfunc;
+		this.name = name;
+		this.childs = childs;
+	}
+
+	static Fields = () => { 
+		progressvalue : "Progressbar value";
+		heightfunc : "function to give the value";
+		name : "function to give the value";
+		childs : "function to give the value";
+	}
+
+	Build(){	
+		return LayoutModel.CreateNode("div"," progress", el => {}, [
+			LayoutModel.CreateNode("div"," progress-bar progress-bar-striped progress-bar-animated", el => {
+				el.setAttribute("role", this.name);
+				el.setAttribute("aria-valuenow", "75");
+				el.setAttribute("aria-valuemin", "0");
+				el.setAttribute("aria-valuemax", "100");
+				el.style.width = this.progressvalue;
+				el.style.height = this.heightfunc();
+			}, []),
+			LayoutModel.CreateNode("childs"," ", el => {}, LayoutModel.BuildWidgets(this.childs)),
+			LayoutModel.App(""),
+		]);
+	}
+}
 ```
