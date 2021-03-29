@@ -11,7 +11,7 @@ export default class extends LayoutModel {
     static Fields = () => {};
 
     Build(){
-        return LayoutModel.CreateNode("div","",el => {},[
+        return LayoutModel.CreateNode("div", "",el => {},[
             LayoutModel.BuildWidget(this.Nav),
             LayoutModel.CreateNode("div","jumbotron text-center", el => {}, [
                 LayoutModel.CreateNode("section","jumbotron text-center", el => {},[

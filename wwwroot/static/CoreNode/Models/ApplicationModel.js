@@ -19,8 +19,7 @@ export default class RouterModel{
         ],
 
         /* Index of the error route in the Routes objects */
-        ErrorRouteIndex : 0,
-      })
+        ErrorRouteIndex : 0,})
       {
         this.RouterParams = RouterParams;
 
@@ -154,7 +153,7 @@ export default class RouterModel{
             });
         }
         catch (e) {
-            if (e !== BreakException) throw e;
+            if (e != BreakException) throw e;
         }
     
         /* If no route matches the url go to Error route */

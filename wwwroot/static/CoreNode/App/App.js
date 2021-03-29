@@ -1,4 +1,4 @@
-import RouterModel from "../Models/RouterModel.js";
+import ApplicationModel from "../Models/ApplicationModel.js";
 import RootController from "../Controllers/Index.js";
 import ErrorController from "../Controllers/Error.js";
 import UserModels from "../Controllers/UserModels.js";
@@ -7,7 +7,7 @@ import Navigator from '../Widgets/Navigator.js';
 import Footer from '../Widgets/Footer.js';
 import NavigationLink from "../Widgets/NavigationLink.js"
 
-var Router = new RouterModel({
+var Application = new ApplicationModel({
 
     /* Function to be called on error */
     OnErrorCallBack : ErrorContent => { alert(ErrorContent); },
@@ -43,5 +43,4 @@ var Router = new RouterModel({
 
     /* Index of the error route in the Routes objects */
     ErrorRouteIndex : 1,
-      
 });

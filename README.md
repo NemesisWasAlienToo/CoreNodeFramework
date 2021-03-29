@@ -1,50 +1,59 @@
 
-# Core Node SPA Framework
+# Core Node Web Framework
 ## _Lightweight single page app framework_
 This project is still in progress.
 This file will be updated.
->for detailed documentation refer t wiki pages
+>for detailed documentation refer to wiki pages
 
 ## Features
 
 - The framework contains very few files
-- Super easy to work with
+- Easy to work with
 - Completely opensource
-- Easy to deploy
+- Easy to extend
+- Contains tools for extending or completly replacing the widget set
 
-Core node SPA framework is a JavaScript based framework for implementing single page web applications
-using widget like implementation while having the tools for barebone JavaScript HTML view generation.
+Core Node framework is a JavaScript based framework for implementing single page and progressive web applications
+using widget based implementation while having tools for barebone JavaScript and HTML view generation.
 
 > This project is still in development and any file might be subjected to changes
 in the incoming updates and commits.
 For deployment you can use any web server you favor.
 Here for development phase, we are using node.js as web host
 due to its minor time consumption suitable for development purposes.
-we do not recommend using node.js web host for practical uses
+Although we do not recommend using node.js web host for practical uses.
 
 ## Installation
 
-Core Node SPA Server requires [Node.js](https://nodejs.org/) to run.
+### Local Server
+Core Node Server application requires [Node.js](https://nodejs.org/) to run.
 Install the dependencies and start the server after.
 ```sh
 git clone https://github.com/NemesisWasAlienToo/CoreNodeSPA
 cd NodeCoreSPA
 npm init -y
 npm i express
-npm install mssql
 node server.js
 ```
 
-To use Core Node Client side router copy the following tag into your html main page :
-```sh
-<script type="module" src="/* path to Router.js */Router.js"></script>
-```
+### Client side framework
 
+To use the client side framework copy its files into your host application and set their route as static files.
+Then build a javascript file and name it as you please.
+the you need to add refrence to the library and initialize an instance of application.
+bellow is an example of how to set proper refrence to the framework allication model :
+```sh
+
+import ApplicationModel from "/* Path to framework files */Models/ApplicationModel.js";
+
+var Application = new ApplicationModel( ...
+```
 ## Router setup
 To setup router and client side pages you need to follow a few steps :
-- Initialize a router object
-- Create your widgets
+- Create your Layout (optional)
+- Create your widet set
 - Create your controllers
+- Initialize a router object
 
 ### Router Initialzation
 
@@ -56,44 +65,65 @@ To setup router and client side pages you need to follow a few steps :
  | LayoutBuilder | Is called once after downloading the content from the server to build the main layout |
  | Routes | Defines the Route patterns and corresponding controller for the route |
  | ErrorRouteIndex | Index of the Error route in the Routes object |
+
  
 Bellow shows an example initializing a Router object :
 ```sh
     <head>
-        <script type="module" src="/* path to Router.js */Router.js"></script>
         <script type="module">
-            import RouterModel from "/* path to Models Folder */Models/Router.js";
-            import RootController from "/* path to Controllers Folder */Controllers/Index.js";
-            import ErrorController from "/* path to Controllers Folder */Controllers/Error.js";
+        
+            /* Refrence to framework router and application */
+            import ApplicationModel from "../Models/ApplicationModel.js";
 
-            var Router = new RouterModel({
-        
-              /* Function to be called on error */
-              OnErrorCallBack : ErrorContent => { alert(ErrorContent); },
-        
-              /* Functiion to be called on navigation link selection */
-              OnNavItemSelect : NavItem => {
-                NavItem.parentNode.classList.add("active");
-              },
-        
-              /* Function to be called on navigation link unselection */
-              OnNavItemUnelect : NavItem => {
-                  NavItem.parentNode.classList.remove("active");
+            /* Refrence to controllers */
+            import RootController from "../Controllers/Index.js";
+            import ErrorController from "../Controllers/Error.js";
+            import UserModels from "../Controllers/UserModels.js";
+
+            /* Refrence to layout */
+            import Layout from "../Layouts/Layout.js";
+
+            /* Refrence to widgets */
+            import Navigator from '../Widgets/Navigator.js';
+            import Footer from '../Widgets/Footer.js';
+            import NavigationLink from "../Widgets/NavigationLink.js"
+
+            var Application = new ApplicationModel({
+
+                /* Function to be called on error */
+                OnErrorCallBack : ErrorContent => { alert(ErrorContent); },
+
+                /* Functiion to be called on navigation link selection */
+                OnNavItemSelect : NavItem => {
+                    NavItem.parentNode.classList.add("active");
                 },
-        
-              /* Function to create main layout on Document load  */
-              LayoutBuilder : Params => {},
-        
-              /* Route patterns hierarchy, the sooner defined, the higher the priority
-              and the sooner it is captured and thus occures first */
-              Routes: [
-                  { Pattern: "/"                , Controller: RootController  },
-                  { Pattern: "/Error/[Content]" , Controller: ErrorController },
-              ],
-        
-              /* Index of the error route in the Routes objects */
-              ErrorRouteIndex : 1,
-              
+
+                /* Function to be called on navigation link unselection */
+                OnNavItemUnelect : NavItem => {
+                    NavItem.parentNode.classList.remove("active");
+                },
+
+                /* Main layout builder function */
+                LayoutBuilder : (LayoutParams = {
+                    Title : "Core Node"
+                }) => new Layout(
+                    new Navigator(LayoutParams.Title,"/",[
+                        new NavigationLink("Error","/Error/Error is : :)"),
+                        new NavigationLink("User", "/UserModels")
+                    ]),
+                    new Footer("Footer content goes here" ,[])
+                ),
+
+                /* Route patterns hierarchy, the sooner defined, the higher the priority
+                and the sooner it is captured and thus occures first */
+                Routes: [
+                    { Pattern: "/"                , Controller: RootController  },
+                    { Pattern: "/UserModels"      , Controller: UserModels },
+                    { Pattern: "/Error/[Content]" , Controller: ErrorController },
+                ],
+
+                /* Index of the error route in the Routes objects */
+                ErrorRouteIndex : 1,
             });
         </script>
     </head>
@@ -144,7 +174,7 @@ this.Params = {
 The example bellow demonstrates how to setup a route for the index page:
 
 ```sh
-import RootController from "/static/js/Controllers/Index.js";
+import RootController from "/* Path to framework files */Controllers/Index.js";
 
 var RouterParams = {
     Routes: [
@@ -158,7 +188,6 @@ var RouterParams = {
 
 Base Models are to be extended and used in the client side router to handle route
 or new page request content creation or other features
-> Base models are located under : static/js/Models
 
 #### Controller Model
 
@@ -166,7 +195,7 @@ or new page request content creation or other features
 | ------ | ------ |
 | Constructor | Saves the Parameters passed to the controller object |
 | Bild (async) | Builds the corresponding page content |
-| Render | Renders the page content |
+| Render (async) | Renders the page content |
 
 Example bellow demonstrates how to create a controller in a file
 for example, named " index.js ":
@@ -177,8 +206,8 @@ by the RouterParams object
   
 
 ```sh
-import ControllerModel from "../Models/ControllerModel.js"
-import Card from "../Widgets/Card.js"
+import ControllerModel from "/* Path to framework files */Models/ControllerModel.js"
+import Card from "/* Path to framework files */Widgets/Card.js"
 
 export default class extends ControllerModel{
 
@@ -198,7 +227,7 @@ export default class extends ControllerModel{
 Example bellow demonstrates how to create a card widget
 laced in a file name card.js :
 ```sh
-import WidgetModel from "../Models/WidgetModel.js"
+import WidgetModel from "/* Path to framework files */Models/WidgetModel.js"
 
 export default class extends WidgetModel {
 
