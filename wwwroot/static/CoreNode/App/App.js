@@ -36,9 +36,15 @@ var Application = new ApplicationModel({
     /* Route patterns hierarchy, the sooner defined, the higher the priority
     and the sooner it is captured and thus occures first */
     Routes: [
-        { Pattern: "/"                , Controller: RootController  },
+        { Pattern: "/"                , Controller: RootController },
         { Pattern: "/UserModels"      , Controller: UserModels },
-        { Pattern: "/Error/[Content]" , Controller: ErrorController },
+        { Pattern: "/Error/[Content]" , Controller: ErrorController , LayoutBuilder : () => new Layout(
+            new Navigator("Error layout title","/",[
+                new NavigationLink("Error","/Error/Error is : :)"),
+                new NavigationLink("User", "/UserModels")
+            ]),
+            new Footer("Footer content goes here" ,[])
+        ) },
     ],
 
     /* Index of the error route in the Routes objects */
