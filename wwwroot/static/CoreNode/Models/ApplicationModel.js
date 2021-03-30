@@ -106,6 +106,9 @@ export default class RouterModel{
     
         /* Used to pass paramters to View */
         let Params = {};
+
+        /**/
+        let LayoutBuilder = () => {};
     
         /* Normalize url to prevent false interpretation */
         let NormalizedPath = this.NormalizePath(location.pathname);
@@ -166,19 +169,19 @@ export default class RouterModel{
         if(Partial)
         we can check if the view is partial then save the content of body in some variable and later if #app were not found we know that we should restore that
         */
+       
 
         if(DestinationRoute.LayoutBuilder == null || DestinationRoute.LayoutBuilder == undefined){
             this.RouterParams.LayoutBuilder().Render();
+            LayoutBuilder = this.RouterParams.LayoutBuilder;
         }
         else{
             DestinationRoute.LayoutBuilder().Render();
+            LayoutBuilder = DestinationRoute.LayoutBuilder;
         }
     
         /* Executes the Builder */
-        let ControllerInstance = await new DestinationRoute.Controller(() => {
-            this.RouterParams.LayoutBuilder().Render();
-            this.Router();
-        }, this.RouterParams.LayoutBuilder, this.RouterParams.OnErrorCallBack, Params);
+        let ControllerInstance = await new DestinationRoute.Controller(LayoutBuilder, this.RouterParams.OnErrorCallBack, Params);
 
         await ControllerInstance.Init();
         await ControllerInstance.Render();

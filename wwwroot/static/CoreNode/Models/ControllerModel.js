@@ -4,10 +4,7 @@ export default class CotrollerModel{
     static ControllerContext;
 
     /**/
-    constructor(ReRender = () => {}, layoutBuilder = (LayoutParams = {}) => {}, OnErrorCallBack = ErrorContent => {}, Params = {}){
-
-        /**/
-        this.ReRender = ReRender;
+    constructor(layoutBuilder = (LayoutParams = {}) => {}, OnErrorCallBack = ErrorContent => {}, Params = {}){
 
         /**/
         this.layoutBuilder = layoutBuilder;
@@ -17,6 +14,11 @@ export default class CotrollerModel{
 
         /**/
         this.Params = Params;
+    }
+
+    async ReRender(){
+        this.layoutBuilder().Render();
+        await this.Render();
     }
 
     async Init(){

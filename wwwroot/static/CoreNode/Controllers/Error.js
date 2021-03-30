@@ -28,6 +28,9 @@ export default class ErrorController extends ControllerModel{
                         new Paragraph(this.Params.Content),
                         new Paragraph("Return to home"),
                     ]),
+                    new Button("Click me!", async () => {
+                        await this.ReRender();
+                    }),
                 ]),
             ]);
         }
