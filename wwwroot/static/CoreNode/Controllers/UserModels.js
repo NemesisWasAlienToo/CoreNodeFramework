@@ -14,4 +14,20 @@ export default class extends ControllerModel{
             new Progress("90%"),
         ]);
     }
+    
+    async TransitionHandler(IsBefore){
+        if(IsBefore){
+            try{
+                document.getElementById("app").classList.add("hidden");
+                await this.Delay(500);
+            }
+            catch{
+                
+            }
+        }
+        else{
+            document.getElementById("app").classList.remove("hidden");
+            document.getElementById("app").classList.add("visible");
+        }
+    }
 }

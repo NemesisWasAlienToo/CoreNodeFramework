@@ -28,17 +28,26 @@ export default class ErrorController extends ControllerModel{
                         new Paragraph(this.Params.Content),
                         new Paragraph("Return to home"),
                     ]),
-                    new Button("Click me!", async () => {
-                        await this.ReRender();
-                    }),
                 ]),
             ]);
         }
 
         return ErrorController.ControllerContext;
     }
+
+    async TransitionHandler(IsBefore){
+        if(IsBefore){
+            try{
+                document.body.classList.add("hidden");
+                await this.Delay(500);
+            }
+            catch{
+                
+            }
+        }
+        else{
+            document.body.classList.remove("hidden");
+            document.body.classList.add("visible");
+        }
+    }
 }
-
-/*
-
-*/

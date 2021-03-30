@@ -32,8 +32,6 @@ export default class RouterModel{
             })
         }
 
-        this.RouterParams.LayoutBuilder().Render();
-
         /* On history button push */
         window.addEventListener("popstate", this.Router());
 
@@ -169,22 +167,27 @@ export default class RouterModel{
         if(Partial)
         we can check if the view is partial then save the content of body in some variable and later if #app were not found we know that we should restore that
         */
-       
 
         if(DestinationRoute.LayoutBuilder == null || DestinationRoute.LayoutBuilder == undefined){
-            this.RouterParams.LayoutBuilder().Render();
             LayoutBuilder = this.RouterParams.LayoutBuilder;
         }
-        else{
-            DestinationRoute.LayoutBuilder().Render();
+        else
+        {
             LayoutBuilder = DestinationRoute.LayoutBuilder;
         }
-    
+
         /* Executes the Builder */
         let ControllerInstance = await new DestinationRoute.Controller(LayoutBuilder, this.RouterParams.OnErrorCallBack, Params);
 
+        await ControllerInstance.TransitionHandler(true);
+
+        LayoutBuilder().Render();
+
         await ControllerInstance.Init();
+
         await ControllerInstance.Render();
+
+        await ControllerInstance.TransitionHandler(false);
     
         document.querySelectorAll("[data-link][data-nav]").forEach(item => {
     

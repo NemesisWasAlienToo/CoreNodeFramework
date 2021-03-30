@@ -16,6 +16,10 @@ export default class CotrollerModel{
         this.Params = Params;
     }
 
+    /*static */async Delay(ms){
+        await new Promise(resolve => setTimeout(resolve, ms));
+    }
+
     async ReRender(){
         this.layoutBuilder().Render();
         await this.Render();
@@ -34,9 +38,13 @@ export default class CotrollerModel{
     async Render(){
 
         /* Renders the body  of controller */
+        let BodyWidget = await this.Body();
         let AppContent = document.getElementById("app");
         AppContent.innerHTML = "";
-        let BodyWidget = await this.Body();
         AppContent.appendChild(BodyWidget.Build());
+    }
+
+    async TransitionHandler(){
+
     }
 }
