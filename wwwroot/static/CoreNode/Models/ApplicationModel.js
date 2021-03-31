@@ -1,9 +1,4 @@
-/*
-To be added :
- - Option for global layout or partial
-*/
-
-export default class RouterModel{
+export default class ApplicationModel{
     constructor(RouterParams = {
 
         /* Function to be called on error */
@@ -60,6 +55,22 @@ export default class RouterModel{
         
             this.Router();
         });
+
+        console.log(`
+ ██████╗ ██████╗ ██████╗ ███████╗
+██╔════╝██╔═══██╗██╔══██╗██╔════╝
+██║     ██║   ██║██████╔╝█████╗  
+██║     ██║   ██║██╔══██╗██╔══╝  
+╚██████╗╚██████╔╝██║  ██║███████╗
+ ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝
+ 
+ ███╗   ██╗ ██████╗ ██████╗ ███████╗
+ ████╗  ██║██╔═══██╗██╔══██╗██╔════╝
+ ██╔██╗ ██║██║   ██║██║  ██║█████╗  
+ ██║╚██╗██║██║   ██║██║  ██║██╔══╝  
+ ██║ ╚████║╚██████╔╝██████╔╝███████╗
+ ╚═╝  ╚═══╝ ╚═════╝ ╚═════╝ ╚══════╝
+`);
 
         if (!('indexedDB' in window)) {
             console.log('Tour browser does not support IndexedDB');
@@ -185,35 +196,35 @@ export default class RouterModel{
             LayoutBuilder = DestinationRoute.LayoutBuilder;
         }
 
+        
+
         /* Executes the Builder */
-        let ControllerInstance = await new DestinationRoute.Controller(LayoutBuilder, this.RouterParams.OnErrorCallBack, Params);
-
+        let ControllerInstance = await new DestinationRoute.Controller(LayoutBuilder, this.RouterParams.OnErrorCallBack, Params);  
+        
         /**/
-        //await ControllerInstance.TransitionHandler(true);
-
         let Layout = null;
+        let LayoutRedraw = false;
 
         if(this.PreRoute == null || this.PreRoute.LayoutBuilder != DestinationRoute.LayoutBuilder){
             Layout = LayoutBuilder();
             await Layout.Init();
             Layout.Render();
+
+            LayoutRedraw = true;
         }
+
+        ControllerInstance.LayoutRedraw = LayoutRedraw;
 
         /**/
         this.PreRoute = DestinationRoute;
 
-        await ControllerInstance.Init();
-
+        /**/
         await ControllerInstance.Render();
 
-        await ControllerInstance.Final();
-
-        if(Layout != null){
+        /**/
+        if(LayoutRedraw){
             await Layout.Final();
         }
-
-        /**/
-        //await ControllerInstance.TransitionHandler(false);
     
         document.querySelectorAll("[data-link][data-nav]").forEach(item => {
     

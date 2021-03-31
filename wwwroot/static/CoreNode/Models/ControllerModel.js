@@ -38,10 +38,12 @@ export default class CotrollerModel{
     async Render(){
 
         /* Renders the body  of controller */
+        await this.Init();
         let BodyWidget = await this.Body();
         let AppContent = document.getElementById("app");
         AppContent.innerHTML = "";
         AppContent.appendChild(BodyWidget.Build());
+        await this.Final();
     }
 
     async Final(){

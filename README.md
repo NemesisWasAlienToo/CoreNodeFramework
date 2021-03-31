@@ -187,15 +187,29 @@ var RouterParams = {
 ## Base Models
 
 Base Models are to be extended and used in the client side router to handle route
-or new page request content creation or other features
+or new page request content creation or other features.
+Init, Final and this.LayoutRedraw are usually used to create smooth transition functions.
+Init and Final functions are respectively called before
+and after render finction is called.
+> _WARNING_ : Layouts are only re-rendered when path pattern
+has a LayoutBuilder diffrent than the global one passed to the Application instance,
+therefore the Init and Final are only called when a redraw is needed, and so, they
+are suitable to check for any layout re-render with this.LayoutRedraw
+and handle the transition.
 
 #### Controller Model
 
 | Property | Functionality |
 | ------ | ------ |
 | Constructor | Saves the Parameters passed to the controller object |
-| Bild (async) | Builds the corresponding page content |
+| Build (async) | Builds the corresponding page content |
 | Render (async) | Renders the page content |
+| this.Delay(ms) | Creates delays in miliseconds |
+| Init (async) | Is called once first before Build |
+| Final (async) | Is called once after Build |
+| this.LayoutRedraw | A bool value indicating if the layout is redrawn before calling this controller |
+
+---
 
 Example bellow demonstrates how to create a controller in a file
 for example, named " index.js ":
@@ -221,8 +235,12 @@ export default class extends ControllerModel{
 | Property | Functionality |
 | ------ | ------ |
 | Constructor | Does nothing |
-| Bild | Builds and returns the corresponding widget elements |
+| Fields() - (Static) | Returns constructor's arguments with their discription |
+| Build | Builds and returns the corresponding widget elements |
 | BuildChilds | Builds the widgets sub widgets and contains them under the specified element |
+| BuildChild(Widget) | Builds a widgets sub widget and contains it under where it it is called |
+
+---
 
 Example bellow demonstrates how to create a card widget
 laced in a file name card.js :
@@ -254,6 +272,75 @@ export default class extends WidgetModel {
                     ]),
                 ]),
             ]),
+        ]);
+    }
+}
+
+```
+
+#### layout Model
+
+| Property | Functionality |
+| ------ | ------ |
+| Constructor() | Does nothing |
+| Fields() - (Static) | Returns constructor's arguments with their discription |
+| Build() | Builds and returns the corresponding widget elements |
+| BuildChild(Widget) | Builds a widgets sub widget and contains it under where it it is called |
+| BuildChilds(WidgetList) | Builds the widgets sub widgets and contains them under where it it is called |
+| App(ElementClasses) | Builds and and returns a body container in which the controllers' bodies will be rendered |
+
+---
+
+Example bellow demonstrates how to create a card widget
+laced in a file name card.js :
+```sh
+import LayoutModel from "/* Path to framework files */Models/LayoutModel.js"
+
+export default class extends LayoutModel {
+
+    constructor(Nav, Footer){
+        super();
+        this.Nav = Nav;
+        this.Footer = Footer;
+    }
+
+    static Fields = () => {
+		Nav : "Navigation bar widget";
+		Footer : "Footer widget"
+	};
+
+    async Init(){
+        document.body.classList.add("hidden");
+        await this.Delay(200);
+    }
+
+    async Final(){
+        document.body.classList.remove("hidden");
+        document.body.classList.add("visible");
+    }
+
+    Build(){
+        return LayoutModel.CreateNode("div", "",el => {},[
+            LayoutModel.BuildWidget(this.Nav),
+            LayoutModel.CreateNode("div","jumbotron text-center", el => {}, [
+                LayoutModel.CreateNode("section","jumbotron text-center", el => {},[
+                    LayoutModel.CreateNode("div","container",el => {}, [
+                        LayoutModel.CreateNode("h1", "", el => { el.innerText = "Example"}),
+                        LayoutModel.CreateNode("p", "lead text-muted", el => { el.innerText = "Your leading text goes here"}),
+                        LayoutModel.CreateNode("p", "", el => {}, null),
+                    ]),
+                ]),
+                LayoutModel.CreateNode("div","album py-5 bg-light test-transition",el => {}, [
+                    LayoutModel.CreateNode("div","container",el => {}, [
+                        LayoutModel.CreateNode("div","row",el => {}, [
+                            LayoutModel.CreateNode("div","col-md-12",el => {}, [
+                                LayoutModel.App(""),
+                            ]),
+                        ]),
+                    ]),
+                ]),
+            ]),
+            LayoutModel.BuildWidget(this.Footer),
         ]);
     }
 }

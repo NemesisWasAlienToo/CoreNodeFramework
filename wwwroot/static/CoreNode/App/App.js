@@ -27,7 +27,7 @@ var Application = new ApplicationModel({
         Title : "Core Node"
     }) => new Layout(
         new Navigator(LayoutParams.Title,"/",[
-            new NavigationLink("Error","/Error/Error is : :)"),
+            new NavigationLink("Error","/Error/ErrorContent:)"),
             new NavigationLink("User", "/UserModels")
         ]),
         new Footer("Footer content goes here" ,[])

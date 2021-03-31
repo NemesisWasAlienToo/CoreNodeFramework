@@ -12,7 +12,7 @@ export default class extends LayoutModel {
 
     async Init(){
         document.body.classList.add("hidden");
-        await this.Delay(500);
+        await this.Delay(200);
     }
 
     async Final(){
@@ -31,7 +31,7 @@ export default class extends LayoutModel {
                         LayoutModel.CreateNode("p", "", el => {}, null),
                     ]),
                 ]),
-                LayoutModel.CreateNode("div","album py-5 bg-light",el => {}, [
+                LayoutModel.CreateNode("div","album py-5 bg-light test-transition",el => {}, [
                     LayoutModel.CreateNode("div","container",el => {}, [
                         LayoutModel.CreateNode("div","row",el => {}, [
                             LayoutModel.CreateNode("div","col-md-12",el => {}, [

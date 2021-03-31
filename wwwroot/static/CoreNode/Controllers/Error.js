@@ -34,15 +34,4 @@ export default class ErrorController extends ControllerModel{
 
         return ErrorController.ControllerContext;
     }
-
-    async TransitionHandler(IsBefore){
-        if(IsBefore){
-            document.body.classList.add("hidden");
-            await this.Delay(500);
-        }
-        else{
-            document.body.classList.remove("hidden");
-            document.body.classList.add("visible");
-        }
-    }
 }

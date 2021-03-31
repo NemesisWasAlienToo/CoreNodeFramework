@@ -30,11 +30,6 @@ export default class LayoutModel extends WidgetModel{
     }
 
     /**/
-    BuildChilds(){
-        return this.Childs.map(Widget => Widget.Build());
-    }
-
-    /**/
     async Init(){
 
     }
