@@ -50,7 +50,8 @@ var Application = new ApplicationModel( ...
 ```
 ## Router setup
 To setup router and client side pages you need to follow a few steps :
-- Create your Layout (optional)
+- Create your global layout (optional)
+- Create your path specific layouts (optional)
 - Create your widet set
 - Create your controllers
 - Initialize a router object
@@ -66,7 +67,7 @@ To setup router and client side pages you need to follow a few steps :
  | Routes | Defines the Route patterns and corresponding controller for the route |
  | ErrorRouteIndex | Index of the Error route in the Routes object |
 
- 
+ ---
 Bellow shows an example initializing a Router object :
 ```sh
     <head>
@@ -119,7 +120,13 @@ Bellow shows an example initializing a Router object :
                 Routes: [
                     { Pattern: "/"                , Controller: RootController  },
                     { Pattern: "/UserModels"      , Controller: UserModels },
-                    { Pattern: "/Error/[Content]" , Controller: ErrorController },
+                    { Pattern: "/Error/[Content]" , Controller: ErrorController ,
+
+					/* Optional layout for this route pattern */
+					
+					LayoutBuilder : () => new Layout(
+            			new Navigator("Error layout title","/",[]),
+						new Footer("Footer content goes here" ,[])) },
                 ],
 
                 /* Index of the error route in the Routes objects */
