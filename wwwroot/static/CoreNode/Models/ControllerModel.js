@@ -44,7 +44,7 @@ export default class CotrollerModel{
         AppContent.appendChild(BodyWidget.Build());
     }
 
-    async TransitionHandler(){
+    async Final(){
 
     }
 }

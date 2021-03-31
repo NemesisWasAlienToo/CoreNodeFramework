@@ -5,6 +5,16 @@ import ControllerModel from "../Models/ControllerModel.js"
 import Button from "../Widgets/Button.js"
 
 export default class extends ControllerModel{
+    async Init(){
+        document.getElementById("app").classList.add("hidden");
+        await this.Delay(500);
+    }
+
+    async Final(IsBefore){
+        document.getElementById("app").classList.remove("hidden");
+        document.getElementById("app").classList.add("visible");
+    }
+    
     async Body(){
         return new Container([
             new Button("Click me!", async () => {
@@ -13,21 +23,5 @@ export default class extends ControllerModel{
             }),
             new Progress("90%"),
         ]);
-    }
-    
-    async TransitionHandler(IsBefore){
-        if(IsBefore){
-            try{
-                document.getElementById("app").classList.add("hidden");
-                await this.Delay(500);
-            }
-            catch{
-                
-            }
-        }
-        else{
-            document.getElementById("app").classList.remove("hidden");
-            document.getElementById("app").classList.add("visible");
-        }
     }
 }

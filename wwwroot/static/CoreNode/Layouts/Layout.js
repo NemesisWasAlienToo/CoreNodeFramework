@@ -10,6 +10,16 @@ export default class extends LayoutModel {
 
     static Fields = () => {};
 
+    async Init(){
+        document.body.classList.add("hidden");
+        await this.Delay(500);
+    }
+
+    async Final(){
+        document.body.classList.remove("hidden");
+        document.body.classList.add("visible");
+    }
+
     Build(){
         return LayoutModel.CreateNode("div", "",el => {},[
             LayoutModel.BuildWidget(this.Nav),

@@ -1,3 +1,8 @@
+/*
+To be added :
+ - Option for global layout or partial
+*/
+
 export default class RouterModel{
     constructor(RouterParams = {
 
@@ -31,6 +36,9 @@ export default class RouterModel{
                 .catch(err => console.log("service worker not registered", err))
             })
         }
+
+        //this.RouterParams.LayoutBuilder().Render();
+        this.PreRoute = null;
 
         /* On history button push */
         window.addEventListener("popstate", this.Router());
@@ -133,7 +141,8 @@ export default class RouterModel{
                     });
     
                     /* Happens id the rout template has arguments in them */
-                    if(CurrentRoute.length > 1){
+                    if(CurrentRoute.length > 1)
+                    {
     
                         /* Gets the names of the parameters present in the route template */
                         let ParamNames = this.RouteParams(item.Pattern);
@@ -161,7 +170,7 @@ export default class RouterModel{
         if(DestinationRoute == null){
             this.RouterParams.OnErrorCallBack("404 : Page not found");
             DestinationRoute = this.RouterParams.Routes[this.RouterParams.ErrorRouteIndex];
-        }
+        }    
     
         /*
         if(Partial)
@@ -179,15 +188,32 @@ export default class RouterModel{
         /* Executes the Builder */
         let ControllerInstance = await new DestinationRoute.Controller(LayoutBuilder, this.RouterParams.OnErrorCallBack, Params);
 
-        await ControllerInstance.TransitionHandler(true);
+        /**/
+        //await ControllerInstance.TransitionHandler(true);
 
-        LayoutBuilder().Render();
+        let Layout = null;
+
+        if(this.PreRoute == null || this.PreRoute.LayoutBuilder != DestinationRoute.LayoutBuilder){
+            Layout = LayoutBuilder();
+            await Layout.Init();
+            Layout.Render();
+        }
+
+        /**/
+        this.PreRoute = DestinationRoute;
 
         await ControllerInstance.Init();
 
         await ControllerInstance.Render();
 
-        await ControllerInstance.TransitionHandler(false);
+        await ControllerInstance.Final();
+
+        if(Layout != null){
+            await Layout.Final();
+        }
+
+        /**/
+        //await ControllerInstance.TransitionHandler(false);
     
         document.querySelectorAll("[data-link][data-nav]").forEach(item => {
     

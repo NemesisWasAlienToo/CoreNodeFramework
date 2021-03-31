@@ -37,13 +37,8 @@ export default class ErrorController extends ControllerModel{
 
     async TransitionHandler(IsBefore){
         if(IsBefore){
-            try{
-                document.body.classList.add("hidden");
-                await this.Delay(500);
-            }
-            catch{
-                
-            }
+            document.body.classList.add("hidden");
+            await this.Delay(500);
         }
         else{
             document.body.classList.remove("hidden");

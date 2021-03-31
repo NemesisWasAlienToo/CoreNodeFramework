@@ -11,6 +11,10 @@ export default class LayoutModel extends WidgetModel{
     /**/
     static Fields = () => {};
 
+    /*static */async Delay(ms){
+        await new Promise(resolve => setTimeout(resolve, ms));
+    }
+
     /**/
     static App(Classes = "") {
 
@@ -31,7 +35,7 @@ export default class LayoutModel extends WidgetModel{
     }
 
     /**/
-    Loading(IsLoading){
+    async Init(){
 
     }
 
@@ -44,5 +48,9 @@ export default class LayoutModel extends WidgetModel{
         /* Renders the body of Layput */
         document.body.innerHTML = "";
         document.body.prepend(this.Build());
+    }
+
+    async Final(){
+        
     }
 }
