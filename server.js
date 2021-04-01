@@ -44,6 +44,12 @@ app.get("/favicon.ico", (req, res) => {
     res.sendFile(path.resolve(__dirname, "wwwroot", "favicon.ico"));
 });
 
+app.get("/loading", (req, res) => {
+
+    console.log("Requested url : " + req.originalUrl);
+    res.sendFile(path.resolve(__dirname, "wwwroot", "loading.html"));
+});
+
 app.get("/*", (req, res) => {
     console.log("Requested url : " + req.originalUrl);
     res.sendFile(path.resolve(__dirname, "wwwroot", "index.html"));

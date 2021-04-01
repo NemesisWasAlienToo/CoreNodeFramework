@@ -219,7 +219,13 @@ export default class ApplicationModel{
         this.PreRoute = DestinationRoute;
 
         /**/
+        await ControllerInstance.Init();
+
+        /**/
         await ControllerInstance.Render();
+
+        /**/
+        await ControllerInstance.Final();
 
         /**/
         if(LayoutRedraw){

@@ -1,15 +1,11 @@
 .visible {
-    visibility: visible;
-    opacity: 1;
-    transition: opacity 0.2s linear;
-  }
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.2s linear;
+}
 
-  .hidden {
-    visibility: hidden;
-    opacity: 0;
-    transition: visibility 0s 0.1s, opacity 0.1s linear;
-  }
-
-  .test-transition{
-    transition: height 1s linear;
-  }
+.hidden {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s 0.1s, opacity 0.1s linear;
+}
