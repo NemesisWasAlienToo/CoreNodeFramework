@@ -4,9 +4,6 @@ const CacheName = "CoreNodeCahce";
 const Assets = [
   "/",
   "/manifest.json",
-  "/favicon.ico",
-  "/static/css/site.css",
-  "/static/icons/144.png",
 ];
 
 self.addEventListener("install", InstallEvent => {
@@ -22,7 +19,10 @@ self.addEventListener('fetch', function(event) {
     caches.open(CacheName).then(function(cache) {
       return cache.match(event.request).then(function (response) {
         return response || fetch(event.request).then(function(response) {
-          //cache.put(event.request, response.clone());
+          if(event.request.destination != 'document' && event.request.url.indexOf('http') === 0){
+            //console.log("Adding file to cache : " + event.request.destination);
+            //cache.put(event.request, response.clone());
+          }
           return response;
         });
       });

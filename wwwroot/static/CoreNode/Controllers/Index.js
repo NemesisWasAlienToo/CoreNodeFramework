@@ -1,7 +1,8 @@
 /**/
 
 import ControllerModel from "../Models/ControllerModel.js"
-import Card from "../Widgets/Card.js"
+import Card from "../Widgets/Card.js";
+import Paragraph from "../Widgets/Paragraph.js"
 
 export default class extends ControllerModel{
     async Init(){
@@ -22,6 +23,9 @@ export default class extends ControllerModel{
     }
 
     async Body(){
-        return new Card("hiiiiiiiiiiiiiiiiiiiiiiiiiii");
+        return new Card("hi","there",[
+            new Paragraph("asdasdas"),
+            new Paragraph("asdasdas111")
+        ]);
     }
 }

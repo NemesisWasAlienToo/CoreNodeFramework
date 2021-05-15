@@ -41,7 +41,7 @@ node server.js
 To use the client side framework copy its files into your host application and set their route as static files.
 Then build a javascript file and name it as you please.
 the you need to add refrence to the library and initialize an instance of application.
-bellow is an example of how to set proper refrence to the framework allication model :
+bellow is an example of how to set proper refrence to the framework application model :
 ```sh
 
 import ApplicationModel from "/* Path to framework files */Models/ApplicationModel.js";

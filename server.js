@@ -26,6 +26,7 @@ app.get("/", (req, res) => {
     res.sendFile(path.resolve(__dirname, "wwwroot", "index.html"));
 });
 
+
 app.get("/ServiceWorker.js", (req, res) => {
 
     console.log("Requested url : " + req.originalUrl);

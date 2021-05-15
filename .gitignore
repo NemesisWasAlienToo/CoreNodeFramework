@@ -1,5 +1,6 @@
 node_modules
 wwwroot/CoreNodeLogo.png
 wwwroot/CoreNodeLogo-Transparent.png
+wwwroot/chat.html
 package-lock.json
 package.json

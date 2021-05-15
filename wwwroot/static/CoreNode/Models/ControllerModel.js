@@ -1,4 +1,5 @@
 /**/
+import WidgetModel from "./WidgetModel.js";
 export default class CotrollerModel{
 
     static ControllerContext;
@@ -39,9 +40,16 @@ export default class CotrollerModel{
 
         /* Renders the body  of controller */
         let BodyWidget = await this.Body();
-        let AppContent = document.getElementById("app");
-        AppContent.innerHTML = "";
-        AppContent.appendChild(BodyWidget.Build());
+
+        if(BodyWidget == null || BodyWidget == undefined){
+            return;
+        }
+        
+        if(BodyWidget !== null && BodyWidget !== undefined){
+            let AppContent = document.getElementById("app");
+            AppContent.innerHTML = "";
+            AppContent.appendChild(BodyWidget instanceof WidgetModel ? BodyWidget.Build():BodyWidget);
+        }
     }
 
     async Final(){

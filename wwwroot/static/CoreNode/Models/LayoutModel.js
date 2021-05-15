@@ -3,6 +3,8 @@ import WidgetModel from "./WidgetModel.js";
 /**/
 export default class LayoutModel extends WidgetModel{
 
+    static LayoutContext;
+
     /**/    
     constructor(){
         super();
@@ -10,24 +12,6 @@ export default class LayoutModel extends WidgetModel{
 
     /**/
     static Fields = () => {};
-
-    /*static */async Delay(ms){
-        await new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    /**/
-    static App(Classes = "") {
-
-        let _Element =  document.createElement("main");
-        _Element.className = Classes;
-        _Element.id = "app";
-        return _Element;
-    }
-    
-    /**/
-    static BuildWidget(InnerWidgets){
-        return InnerWidgets.Build();
-    }
 
     /**/
     async Init(){
@@ -41,7 +25,9 @@ export default class LayoutModel extends WidgetModel{
 
     Render(){
         /* Renders the body of Layput */
-        document.body.innerHTML = "";
+        document.body.childNodes.forEach(node => {
+            if(node.nodeName != "SCRIPT" && node.nodeName != "LINK") node.remove();
+        });
         document.body.prepend(this.Build());
     }
 

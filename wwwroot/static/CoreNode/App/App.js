@@ -1,11 +1,6 @@
 import ApplicationModel from "../Models/ApplicationModel.js";
 import RootController from "../Controllers/Index.js";
-import ErrorController from "../Controllers/Error.js";
-import UserModels from "../Controllers/UserModels.js";
 import Layout from "../Layouts/Layout.js";
-import Navigator from '../Widgets/Navigator.js';
-import Footer from '../Widgets/Footer.js';
-import NavigationLink from "../Widgets/NavigationLink.js"
 
 var Application = new ApplicationModel({
 
@@ -23,23 +18,12 @@ var Application = new ApplicationModel({
     },
 
     /* Main layout builder function */
-    LayoutBuilder : (LayoutParams = {
-        Title : "Core Node"
-    }) => new Layout(
-        new Navigator(LayoutParams.Title,"/",[
-            new NavigationLink("Error","/Error/ErrorContent:)"),
-            new NavigationLink("User", "/UserModels")
-        ]),
-        new Footer("Footer content goes here" ,[])
-    ),
+    LayoutBuilder : () => new Layout(),
 
     /* Route patterns hierarchy, the sooner defined, the higher the priority
     and the sooner it is captured and thus occures first */
     Routes: [
-        { Pattern: "/"                , Controller: RootController },
-        { Pattern: "/UserModels"      , Controller: UserModels },
-        { Pattern: "/Error/[Content]" , Controller: ErrorController , LayoutBuilder : () => new Layout(
-            new Navigator("Error layout title","/",[]),new Footer("Footer content goes here" ,[])) },
+        { Pattern: "/" , Controller: RootController },
     ],
 
     /* Index of the error route in the Routes objects */

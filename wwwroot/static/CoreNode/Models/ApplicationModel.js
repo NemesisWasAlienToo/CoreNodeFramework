@@ -12,6 +12,12 @@ export default class ApplicationModel{
   
         /* Main layout builder function */
         LayoutBuilder : (LayoutParams = {}) => {},
+
+        /* Initiates UI events */
+        UIInitializer : () => {},
+
+        /* Forces layout to be rendered everytime */
+        ForceLayoutBuild : false,
   
         /* Route patterns hierarchy, the sooner defined, the higher the priority */
         Routes: [
@@ -23,38 +29,14 @@ export default class ApplicationModel{
       {
         this.RouterParams = RouterParams;
 
-        if ("serviceWorker" in navigator) {
-            window.addEventListener("load", function() {
+        if ("serviceWorker" in navigator && window.DEV == undefined) {
+            window.addEventListener("load", () => {
               navigator.serviceWorker
                 .register("/ServiceWorker.js")
                 .then(res => console.log("service worker registered"))
                 .catch(err => console.log("service worker not registered", err))
             })
-        }
-
-        //this.RouterParams.LayoutBuilder().Render();
-        this.PreRoute = null;
-
-        /* On history button push */
-        window.addEventListener("popstate", this.Router());
-
-        document.addEventListener("DOMContentLoaded", () => {
-            document.querySelectorAll("[data-link]").forEach(item => {
-                item.addEventListener("click", e => {
-                    e.preventDefault();
-                    this.NavigateTo(e.target.href);
-                });
-            });
-
-            document.body.addEventListener("click", e => {
-                if (e.target.matches("[data-link]")) {
-                    e.preventDefault();
-                    this.NavigateTo(e.target.href);
-                }
-            });
-        
-            this.Router();
-        });
+        }        
 
         console.log(`
  ██████╗ ██████╗ ██████╗ ███████╗
@@ -75,12 +57,19 @@ export default class ApplicationModel{
         if (!('indexedDB' in window)) {
             console.log('Tour browser does not support IndexedDB');
         }
+
+        this.PreRoute = null;
+
+        /* On history button push */
+        window.addEventListener("popstate", this.Router);
+
+        this.Router();
     }
 
     /*  */
-    RouteParams = route => route.match(/(?<=\[)(.+?)(?=\])/g);
+    static RouteParams = route => route.match(/(?<=\[)(.+?)(?=\])/g);
 
-    ReloadScripts = () => {
+    static ReloadScripts = () => {
       
         document.querySelectorAll("script").forEach(item => {
             let element = document.createElement("script");
@@ -92,10 +81,10 @@ export default class ApplicationModel{
     };
 
     /* Gives the regular expression for validating the path with in compare to a route pattern */
-    RegexForRoute = route => new RegExp("^" + route.replace(/\//g, "\\/").replace(/\[(.+?)\]/g, "(.+)") + "$");
+    static RegexForRoute = route => new RegExp("^" + route.replace(/\//g, "\\/").replace(/\[(.+?)\]/g, "(.+)") + "$");
 
     /* Normalizes the current path */
-    NormalizePath = path => path.replace(/\/\//g,"/null/");
+    static NormalizePath = path => path.replace(/\/\//g,"/null/");
 
     NavigateTo = url => {
         history.pushState(null, null, url);
@@ -103,7 +92,7 @@ export default class ApplicationModel{
     };
 
     /* Gets the string containing the url get params */
-    PathParams = path => {
+    static PathParams = path => {
 
         /* Gets the part of the url containing url get parameters */
         let args = path.match(/(?<=\?)(.*)$/g);
@@ -124,11 +113,11 @@ export default class ApplicationModel{
         /* Used to pass paramters to View */
         let Params = {};
 
-        /**/
+        /* Initialize layout builder*/
         let LayoutBuilder = () => {};
     
         /* Normalize url to prevent false interpretation */
-        let NormalizedPath = this.NormalizePath(location.pathname);
+        let NormalizedPath = ApplicationModel.NormalizePath(location.pathname);
     
         var BreakException = {};
     
@@ -138,13 +127,13 @@ export default class ApplicationModel{
             this.RouterParams.Routes.forEach(item => {
     
                 /* Keep the Current route in this variable */
-                let CurrentRoute = NormalizedPath.match(this.RegexForRoute(item.Pattern));
+                let CurrentRoute = NormalizedPath.match(ApplicationModel.RegexForRoute(item.Pattern));
         
                 if(CurrentRoute != null){
     
                     DestinationRoute = item;
     
-                    this.PathParams(NormalizedPath).forEach(item => {
+                    ApplicationModel.PathParams(NormalizedPath).forEach(item => {
     
                         /* Splits key value pairs seprated by an '=' and puts the pair in Params*/
                         let args = item.split("=");
@@ -156,7 +145,7 @@ export default class ApplicationModel{
                     {
     
                         /* Gets the names of the parameters present in the route template */
-                        let ParamNames = this.RouteParams(item.Pattern);
+                        let ParamNames = ApplicationModel.RouteParams(item.Pattern);
             
                         if(ParamNames != null){
             
@@ -176,17 +165,16 @@ export default class ApplicationModel{
         catch (e) {
             if (e != BreakException) throw e;
         }
+
+        if(this.PreRoute == DestinationRoute){
+            return;
+        }
     
         /* If no route matches the url go to Error route */
         if(DestinationRoute == null){
             this.RouterParams.OnErrorCallBack("404 : Page not found");
             DestinationRoute = this.RouterParams.Routes[this.RouterParams.ErrorRouteIndex];
-        }    
-    
-        /*
-        if(Partial)
-        we can check if the view is partial then save the content of body in some variable and later if #app were not found we know that we should restore that
-        */
+        }
 
         if(DestinationRoute.LayoutBuilder == null || DestinationRoute.LayoutBuilder == undefined){
             LayoutBuilder = this.RouterParams.LayoutBuilder;
@@ -196,16 +184,14 @@ export default class ApplicationModel{
             LayoutBuilder = DestinationRoute.LayoutBuilder;
         }
 
-        
-
         /* Executes the Builder */
-        let ControllerInstance = await new DestinationRoute.Controller(LayoutBuilder, this.RouterParams.OnErrorCallBack, Params);  
+        let ControllerInstance = new DestinationRoute.Controller(LayoutBuilder, this.RouterParams.OnErrorCallBack, Params);  
         
         /**/
         let Layout = null;
         let LayoutRedraw = false;
 
-        if(this.PreRoute == null || this.PreRoute.LayoutBuilder != DestinationRoute.LayoutBuilder){
+        if(this.PreRoute == null || this.PreRoute.LayoutBuilder != DestinationRoute.LayoutBuilder || this.RouterParams.ForceLayoutBuild){
             Layout = LayoutBuilder();
             await Layout.Init();
             Layout.Render();
@@ -237,9 +223,18 @@ export default class ApplicationModel{
             // Uselect all 
             this.RouterParams.OnNavItemUnelect(item);
     
-            // Find the selectedd nav-link and select it
-            if(item.getAttribute("href").match(this.RegexForRoute(DestinationRoute.Pattern)) !== null)
+            // Find the selected nav-link and select it
+            if(item.getAttribute("href").match(ApplicationModel.RegexForRoute(DestinationRoute.Pattern)) !== null)
                 this.RouterParams.OnNavItemSelect(item);
+        });
+
+        this.RouterParams.UIInitializer(LayoutRedraw);
+
+        document.querySelectorAll("[data-link]").forEach(element => {
+            element.onclick = e => {
+                    e.preventDefault();
+                    this.NavigateTo(element.href);
+            };
         });
         
     };
