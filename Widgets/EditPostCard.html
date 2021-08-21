@@ -1,0 +1,84 @@
+<default:widget:PostCard>
+    <constructor></constructor>
+    <Build()>
+        <div class="col-12 col-md-8 col-xl-6" style="margin: auto;">
+            <div class="card">
+                <div class="card-header mb-3">
+                    <div class="glide details mt-3">
+                        <div class="glide__track" data-glide-el="track">
+                            <ul class="glide__slides">
+                                <li class="glide__slide"><img alt="detail" src="/Template/img/products/parkin.jpg"
+                                        class="responsive border-0 border-radius img-fluid mb-3"></li>
+                                <li class="glide__slide"><img alt="detail" src="/Template/img/products/napoleonshat.jpg"
+                                        class="responsive border-0 border-radius img-fluid mb-3"></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="glide thumbs">
+                        <div class="glide__track" data-glide-el="track">
+                            <ul class="glide__slides">
+                                <li class="glide__slide"><img alt="thumb" src="/Template/img/products/parkin-thumb.jpg"
+                                        class="responsive border-0 border-radius img-fluid"></li>
+                                <li class="glide__slide"><img alt="thumb"
+                                        src="/Template/img/products/napoleonshat-thumb.jpg"
+                                        class="responsive border-0 border-radius img-fluid"></li>
+                            </ul>
+                        </div>
+                        <div class="glide__arrows" data-glide-el="controls">
+                            <button class="glide__arrow glide__arrow--left" data-glide-dir="<"><i
+                                    class="simple-icon-arrow-left"></i></button>
+                            <button class="glide__arrow glide__arrow--right" data-glide-dir=">"><i
+                                    class="simple-icon-arrow-right"></i></button>
+                        </div>
+                    </div>
+                    <ul class="nav nav-tabs card-header-tabs" role="tablist">
+                        <li class="nav-item"><a class="nav-link active" id="first-tab" data-toggle="tab" href="#first"
+                                role="tab" aria-controls="first" aria-selected="true">Details</a></li>
+                        <li class="nav-item"><a class="nav-link" id="second-tab" data-toggle="tab" href="#second"
+                                role="tab" aria-controls="second" aria-selected="false">Comments(19)</a></li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="first" role="tabpanel" aria-labelledby="first-tab">
+                            <div class="html-editor" id="quillEditor"></div>
+                        </div>
+                        <div class="tab-pane fade" id="second" role="tabpanel" aria-labelledby="second-tab">
+                            <div>
+                                <button class="btn btn-link p-0 pb-2 font-weight-bold" data-toggle="collapse"
+                                    data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    <p>Craft beer labore wes anderson cred nesciunt?</p>
+                                </button>
+                                <div id="collapseOne" class="collapse show" data-parent="#accordion">
+                                    <div class="pb-4">Anim pariatur cliche reprehenderit, enim eiusmod high life
+                                        accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat
+                                        skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch
+                                        3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee
+                                        nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer
+                                        labore wes anderson cred nesciunt sapiente ea proident.</div>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="btn btn-link collapsed p-0 pb-2 font-weight-bold"
+                                    data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false"
+                                    aria-controls="collapseTwo">
+                                    <p>Labore wes anderson cred nesciunt sapiente ea proident?</p>
+                                </button>
+                                <div id="collapseTwo" class="collapse" data-parent="#accordion">
+                                    <div class="pb-4">3 wolf moon officia aute, non cupidatat skateboard dolor
+                                        brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon
+                                        tempor, sunt aliqua put a bird on it squid single-origin coffee nulla
+                                        assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore
+                                        wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher
+                                        vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic
+                                        synth nesciunt you probably haven't heard of them accusamus labore
+                                        sustainable VHS.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </Build()>
+</default:widget:PostCard>

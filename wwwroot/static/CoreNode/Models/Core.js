@@ -63,4 +63,8 @@ export default class Core{
     static BuildWidgets(WidgetList){
         return WidgetList.map(child => child instanceof WidgetModel ? child.Build() : child);
     }
+
+    static async Delay(ms){
+        await new Promise(resolve => setTimeout(resolve, ms));
+    }
 }

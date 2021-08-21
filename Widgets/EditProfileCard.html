@@ -1,0 +1,84 @@
+<default:widget:EditProfileCard var:Image var:Description var:Speciality var:Experiences>
+    <constructor></constructor>
+    <Build()>
+        <div class="card mb-4">
+            <div class="position-absolute card-top-buttons">
+                <button class="btn btn-outline-white icon-button" onclick="#{() => document.getElementById('ProfilePictureSelector').click()}#">
+                    <i class="simple-icon-pencil"></i>
+                </button>
+                <input style="display: none;" type="file" id="ProfilePictureSelector" accept="image/gif, image/jpeg, image/png" onchange="#{
+                    () => {
+                        let input = document.getElementById('ProfilePictureSelector');
+                        let img = document.getElementById('ProfilePicture');
+                        if (input.files && input.files[0]){
+                            var reader = new FileReader();
+                            reader.onload = function (e) {
+                                img.src = e.target.result;
+                            };
+                            reader.readAsDataURL(input.files[0]);
+                        }
+                    }
+                }#"/>
+            </div>
+            <img src=#Image# alt="Detail Picture" class="card-img-top" id="ProfilePicture">
+            <div class="card-body">
+                <div class="input-group mb-3">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Description</span>
+                        </div>
+                        <textarea id="Description" class="form-control" aria-label="With textarea" rows="1">#Description#</textarea>
+                    </div>
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Speciality</span>
+                        </div>
+                        <textarea id="Speciality" class="form-control" aria-label="With textarea" rows="1">#Speciality#</textarea>
+                    </div>
+                </div>
+
+                <p class="text-muted text-small mb-2">Experiences</p>
+                <p class="mb-3" id="Experiences">
+                    <button type="button" class="btn btn-outline-primary badge badge-pill badge-outline-theme-2 mb-1"
+                        style="margin: 5px 0px 5px 5px;" data-toggle="modal" data-target=".bd-example-modal-sm">Add experience</button>
+                    #{...this.Experiences.map(exp => this.Experience(exp))}#
+                </p>
+                <button type="button" class="btn btn-secondary btn-block mb-1 text-center">Save changes</button>
+                <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" style="display: none;" aria-hidden="true">
+                    <div class="modal-dialog modal-sm">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Add new experience</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <button class="btn btn-outline-secondary" type="button" onclick=#{this.AddExperience}#>Add</button>
+                                    </div>
+                                    <input id="NewExp" type="text" class="form-control" placeholder="New experience" aria-describedby="basic-addon1">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </Build()>
+    <Experience() var:Title>
+        <span onclick="#{(ev)=>{if(confirm('Remove?'))ev.target.remove()}}#" class="badge badge-pill badge-outline-theme-2 mb-1" style="cursor: pointer;;margin: 5px 0px 5px 5px;">#{Title}#</span>
+    </Experience()>
+    <AddExperience()>
+        #{{
+            let newexp = document.getElementById("NewExp").value;
+            if(newexp == undefined || newexp == "") return;
+            document.getElementById("Experiences")
+            .appendChild(this.Experience(newexp));
+            document.getElementById("NewExp").value = "";
+        }}#
+    </AddExperience()>
+</default:widget:EditProfileCard>
